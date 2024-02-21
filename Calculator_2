@@ -1,0 +1,125 @@
+import java.util.Scanner;
+
+public class Calculator_II {
+    public static void main(String[] args){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Input:");
+        String expression = scanner.nextLine();
+
+        String strWithoutQuotes = expression.replaceAll("\"", "");// Удаление кавычек
+        if ((strWithoutQuotes.length() <= 0) || (strWithoutQuotes.length() > 9 )){
+            throw new IllegalArgumentException("т.к. количество символов в строке не в диопазоне 1-10");
+        }
+
+        String[] operators = {"+", "-", "/", "*"};
+        String[] operators_for_split = {"\\+", "-", "/", "\\*"};
+
+        int operator_index = -1;
+        for (int i = 0; i < operators.length; i++) {
+            if (strWithoutQuotes.contains(operators[i])) {
+                operator_index = i;
+            }
+        }
+        if (operator_index == -1) {
+            throw new IllegalArgumentException("т.к. оператор не найден в строке (+, -, /, *)");
+        }
+
+        String a, b;
+
+            a = strWithoutQuotes.split(operators_for_split[operator_index])[0];
+        if (a.length() <= 0){
+            throw new IllegalArgumentException("т.к. один из операндов не найден в строке");
+        }
+        try {
+            b = strWithoutQuotes.split(operators_for_split[operator_index])[1];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new IllegalArgumentException ("т.к. один из операндов не найден в строке");
+        }
+
+        switch (operators[operator_index]) {
+            case "+":
+                perfomAddition( a, b);
+                break;
+            case "-":
+                perfomSubtraction( a, b);
+                break;
+            case "/":
+                perfomDivision( a, b);
+                break;
+            case "*":
+                perfomMult( a, b);
+                break;
+            default:
+                throw new IllegalArgumentException("т.к. строка не является операцией");
+        }
+    }
+///////////////////////////////////////////////////////////////////////////////////////////
+    static void perfomAddition(String a, String b) {
+        int numberString1 = a.length();
+        int numberString2 = b.length();
+
+            String finalResult = (a.substring(0,numberString1))+(b.substring(0,numberString2));
+
+            System.out.println("Output: " + "\"" + finalResult +"\"");
+
+    }
+////////////////////////////////////////////////////////////////////////////////////////////
+    static void perfomSubtraction(String a, String b) {
+        String replacement = "";
+        String wordToRemove = b;
+
+            String finalResult = a.replaceFirst(wordToRemove, "");
+
+            System.out.println("Output: " + "\"" + finalResult +"\"");
+
+    }
+////////////////////////////////////////////////////////////////////////////////////////////
+    static void perfomDivision(String a, String b) {
+        int number = 0;
+
+            if (a.matches(".*\\d.*")) {
+                throw new IllegalArgumentException("т.к. первый оперант не строка");
+            }
+            try {
+                number = Integer.parseInt(b);
+            } catch (IllegalArgumentException e){
+                throw new IllegalArgumentException("т.к. используются недопустимая операция");
+            }
+            if ((number < 1) || (number > 10)) {
+                throw new IllegalArgumentException("т.к. число не в диопазоне 1-10");
+            }
+        int numberString = 0;
+            for(int i = 0; i < a.length(); i++) {
+            numberString = i + 1;
+            }
+        int numberResult = numberString / number;
+            String finalResult = (a.substring(0,numberResult));
+
+            System.out.println("Output: " + "\"" + finalResult + "\"");
+    }
+////////////////////////////////////////////////////////////////////////////////////////////
+    static void perfomMult(String a, String b) {
+        int number = 0;
+
+        if (a.matches(".*\\d.*")) {
+            throw new IllegalArgumentException("т.к. первый оперант не строка");
+        }
+        try {
+            number = Integer.parseInt(b);
+        } catch (IllegalArgumentException e){
+            throw new IllegalArgumentException("т.к. используются недопустимая операция");
+        }
+        if ((number < 1) || (number > 10)) {
+            throw new IllegalArgumentException("т.к. число не в диопазоне 1-10");
+        }
+        StringBuilder result = new StringBuilder();
+        for(int i = 0; i < number; i++ ) {
+            result.append(a);
+        }
+        String finalResult = result.toString();
+        if(finalResult.length() > 40) {
+            finalResult = finalResult.substring(0, 40) + "...";
+        }
+        System.out.println("Output: " + "\"" + finalResult + "\"");
+    }
+}
